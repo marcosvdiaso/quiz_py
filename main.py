@@ -2,6 +2,7 @@ import json
 
 escolha_menu = 0
 escolha_config = 0
+infos_questoes = ["category", "value", "questionPath", "questionText", "option1", "option2", "option3", "option4", "option5", "answer", "explanation", "hint"]
 
 while escolha_menu != 3:
     print('''1. Jogar
@@ -43,7 +44,7 @@ while escolha_menu != 3:
                         with open("questoes.json") as a:
                             lista_questoes = json.load(a)
 
-                        questao["categoria"] = input("Categoria da questão: ")
+                        questao["category"] = input("Categoria da questão: ")
                         questao["value"] = int(input("Valor númerico para o acerto da questão: "))
                         questao["questionPath"] = input("Caso queiram usar alguma informação multimídia para complementar a questão: ")
                         questao["questionText"] = input("Texto da questão: ")
@@ -52,8 +53,8 @@ while escolha_menu != 3:
                         questao["option3"] = input("Texto da opção 3: ")
                         questao["option4"] = input("Texto da opção 4: ")
                         questao["option5"] = input("Texto da opção 5: ")
-                        questao["answer"] = int(input("Número da questão correta "))
-                        questao["explanation"] = input("Explicação final da questão para o jogador")
+                        questao["answer"] = int(input("Número da questão correta: "))
+                        questao["explanation"] = input("Explicação final da questão para o jogador: ")
                         questao["hint"] = input("Dica para o jogador: ")
 
                         lista_questoes.append(questao)
@@ -68,8 +69,8 @@ while escolha_menu != 3:
                             lista_questoes = json.load(a)
                         
                         print(f"Total de questões na lista: {len(lista_questoes)}")
-                        escolha_ver = int(input("Deseja ver todas as questões (1) ou apenas uma específica? (2) "))
-                        match escolha_ver:
+                        escolhas = int(input("Deseja ver todas as questões (1) ou apenas uma específica? (2) "))
+                        match escolhas:
                             case 1:
                                 cont = 1
                                 for questoes in lista_questoes:
@@ -88,7 +89,39 @@ while escolha_menu != 3:
                         escolha_config = 0
 
                     case 3:
-                        print("A implementar...")
+                        with open("questoes.json") as a:
+                            lista_questoes = json.load(a)
+                        cont = 1
+                        escolhas = 0
+
+                        while True:
+                            try:
+                                q = int(input("Qual o ID da questão que deseja editar? "))
+                                if q >= len(lista_questoes) or q < 0:
+                                    print("Não existe questão com esse ID.")
+                                else:
+                                    for item in infos_questoes:
+                                        print(f"{cont}. {item}")
+                                        cont+=1
+                                    while escolhas not in range(1, 13):
+                                        try:
+                                            escolhas = int(input("Digite o número correspondente a informação que deseja editar: "))
+                                            lista_questoes[q][infos_questoes[escolhas-1]] = input(f"Digite o novo {infos_questoes[escolhas-1]}: ")
+                                            while escolhas not in ["S", "N"]:
+                                                escolhas = input("Deseja editar mais algo? (S/n)").upper()
+                                            if escolhas == "N":
+                                                break
+                                        except:
+                                            print("Digite um número inteiro válido.")    
+                            except:
+                                print("Digite um número inteiro referente ao ID de uma questão.")
+                                
+                            if escolhas == "N":
+                                    break
+                            
+                        with open("questoes.json", 'w') as arquivo_q:
+                                json.dump(lista_questoes, arquivo_q, indent=1) 
+                            
                         escolha_config = 0
                     
                     case 4:

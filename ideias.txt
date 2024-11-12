@@ -1,5 +1,0 @@
-- criar editor de texto dentro do programa
-- exibir imagem no programa
-- validações em tudo
-
-- Não entendi muitas opções do anexo (value, qpath, explanation)
