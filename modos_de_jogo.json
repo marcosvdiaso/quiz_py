@@ -1,0 +1,13 @@
+{
+ "questoes_fixas": {
+  "questoes": 6,
+  "dicas": 4
+ },
+ "limite_de_tempo": {
+  "questoes": 4,
+  "dicas": 2
+ },
+ "tente_nao_errar": {
+  "dicas": 5
+ }
+}
