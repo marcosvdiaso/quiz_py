@@ -1,5 +1,3 @@
-#comentariosfuncoes
-
 import json, os, random, threading
 from funcs import *
 
@@ -44,59 +42,70 @@ while escolha_menu != 3:
                 case 1:
                     cont_questao = 1
                     pont = 0
-                    max_dicas = config_modos["questoes_fixas"]["dicas"] # configurar maximo de dicas, configurar pular questao, configurar remover 3 repostas erradas
-                    while cont_questao <= config_modos["questoes_fixas"]["questoes"]: # impedir repetição de questões
+                    max_dicas = config_modos["questoes_fixas"]["dicas"]
+                    dicas_usadas = 0
+
+                    while cont_questao <= config_modos["questoes_fixas"]["questoes"]:
                         questao_escolhida = random.choice(lista_questoes)
-                        resposta = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"])
+                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
                         if resposta == True:
                             print("Resposta Correta!")
                             pont += questao_escolhida["value"]
+                        elif resposta == "pular":
+                            print("Questão pulada. Pontuação recebida reduzida.")
+                            pont += (questao_escolhida["value"]//2)
                         else:
-                            print("Resposta errada...")
+                            print("Resposta errada. Sem pontuação.")
                         cont_questao+=1
 
                     input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
-                    escolha_modo = 0 # adicionar jogar novamente
+                    escolha_modo = 0
                     escolha_menu = 0
-                case 2: # A finalizar
+                case 2:
                     parar_timer = threading.Event()
                     cont_questao = 1
                     pont = 0
                     max_dicas = config_modos["limite_de_tempo"]["dicas"]
+                    dicas_usadas = 0
                     tempo = config_modos["limite_de_tempo"]["questoes"] * 10
+                    tempo_restante = [tempo]
 
                     questao_escolhida = random.choice(lista_questoes)
-                    cont_tempo = threading.Thread(target=timer, args=(tempo,parar_timer,))
+                    cont_tempo = threading.Thread(target=timer, args=(tempo_restante,parar_timer,))
                     cont_tempo.start()
 
-                    while tempo >= 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
-                        resp = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"])
-                        if resp == True:
+                    while tempo_restante[0] > 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
+                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
+                        if resposta == True:
                             print("Resposta Correta!")
                             questao_escolhida = random.choice(lista_questoes)
                             cont_questao+=1
+                        elif resposta == "pular":
+                            print("Questão pulada. Sem pontuação.")
                         else:
                             print("Resposta errada, tente novamente.")
 
                     parar_timer.set()
+                    pont = tempo_restante[0]
                     cont_tempo.join()
 
-                    if tempo > 0:
-                        pont = tempo
-
                     input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
-                    escolha_modo = 0 # adicionar jogar novamente
+                    escolha_modo = 0
                     escolha_menu = 0
                 case 3:
                     cont_questao = 1
                     pont = 0
-                    max_dicas = config_modos["tente_não_errar"]["dicas"] # configurar maximo de dicas, configurar pular questao, configurar remover 3 repostas erradas
-                    while cont_questao <= len(lista_questoes): # impedir repetição de questões
+                    max_dicas = config_modos["tente_nao_errar"]["dicas"]
+                    dicas_usadas = 0
+                    
+                    while cont_questao <= len(lista_questoes):
                         questao_escolhida = random.choice(lista_questoes)
-                        resposta = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"])
+                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
                         if resposta == True:
                             print("Resposta Correta!")
                             pont += questao_escolhida["value"]
+                        elif resposta == "pular":
+                            print("Questão pulada. Sem pontuação.")
                         else:
                             print("Você errou.")
                             break
@@ -105,10 +114,10 @@ while escolha_menu != 3:
                     if cont_questao >= len(lista_questoes):
                         print("As questões acabaram. Você venceu o modo Tente não errar.")
                     input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
-                    escolha_modo = 0 # adicionar jogar novamente
+                    escolha_modo = 0 
                     escolha_menu = 0
                 case 4:
-                    escolha_modo = 0 # adicionar jogar novamente
+                    escolha_modo = 0 
                     escolha_menu = 0
         case 2:
             os.system('cls' if os.name == 'nt' else 'clear')
