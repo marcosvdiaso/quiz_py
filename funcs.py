@@ -1,4 +1,4 @@
-import time, random
+import time, random, json
 
 def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, answer, hint, dicas_usadas, max_dicas, questoes_corretas):
     resposta_usuario = 0
@@ -100,3 +100,185 @@ def entrar_ranking(ranking, pont):
         nome = input(f"Pontuação {pont}. Digite seu nome para salvar sua pontuação: ")
         jogador = {"nome":nome, "pontuacao":pont}
         ranking.append(jogador)
+
+def validacao_menu(x, y):
+    while True:
+        try:
+            escolha = int(input("Escolha a opção desejada: "))
+            if escolha not in range(x, y):
+                print(f"Digite um número de {x} a {y-1}.")
+            else:
+                return escolha
+        except ValueError:
+            print(f"Digite um número de {x} a {y-1}.")
+
+def selecionar_questao(lista_questoes, questoes_feitas):
+    questao = random.choice(lista_questoes)
+    while questao in questoes_feitas:
+        questao = random.choice(lista_questoes)
+    questoes_feitas.append(questao)
+    return questao
+
+def load_json(arquivo):
+    with open(arquivo) as x:
+        return json.load(x)
+    
+def dump_json(arquivo, variavel):
+    with open(arquivo, "w") as x:
+        json.dump(variavel, x, indent=1)
+
+def config_modos_questoes(questoes, lista_questoes):
+    while True:
+        try:
+            questoes = int(input("Insira o número de questões: "))
+            if questoes > len(lista_questoes) or questoes < 1:
+                print(f"Digite um valor entre 1 e {len(lista_questoes)}.")
+            else:
+                return questoes
+        except ValueError:
+            print("Digite um número inteiro válido.")
+
+def config_modos_dicas(dicas):
+    while True:
+        try:
+            dicas = int(input("Insira o número de dicas: "))
+            if dicas < 0:
+                print("Digite um número inteiro válido.")
+            else:
+                return dicas
+        except ValueError:
+            print("Digite um número inteiro válido.")
+
+def criar_questao():
+    questao = {}
+    questao["category"] = input("Categoria da questão: ")
+    while True:
+        try:
+            questao["value"] = int(input("Valor númerico para o acerto da questão: "))
+            if questao["value"] < 0:
+                print("Digite um número inteiro.")
+            else:
+                break
+        except:
+            print("Digite um número inteiro.")
+    questao["questionPath"] = input("Caso queiram usar alguma informação multimídia para complementar a questão: ")
+    questao["questionText"] = input("Texto da questão: ")
+    questao["option1"] = input("Texto da opção 1: ")
+    questao["option2"] = input("Texto da opção 2: ")
+    questao["option3"] = input("Texto da opção 3: ")
+    questao["option4"] = input("Texto da opção 4: ")
+    questao["option5"] = input("Texto da opção 5: ")
+    while True:
+        try:
+            questao["answer"] = int(input("Número da questão correta: "))
+            if questao["answer"] not in range(1, 6):
+                print("Digite um número entre 1 e 5")
+            else:
+                break
+        except:
+            print("Digite um número entre 1 e 5")
+    questao["hint"] = input("Dica para o jogador: ")
+    return questao
+
+def visualizar_questao(lista_questoes):
+    print(f"Total de questões na lista: {len(lista_questoes)}")
+    while True:
+        try:
+            escolhas = int(input("Deseja ver todas as questões (1) ou apenas uma específica? (2) "))
+            if escolhas not in range(1, 3):
+                print("Digite 1 ou 2.")
+            else:
+                break
+        except ValueError:
+            print("Digite 1 ou 2.")
+    match escolhas:
+        case 1:
+            cont = 1
+            for questoes in lista_questoes:
+                print(f"Questão {cont}:")
+                for keys in questoes:
+                    print(keys, end =': ')
+                    print(questoes[keys])
+                cont+= 1
+                print("---------------------------------------------")
+        case 2:
+            while True:
+                try:
+                    q = int(input("ID da questão? "))
+                    if q < 0:
+                        print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+                    else:
+                        for keys in lista_questoes[q]:
+                            print(keys, end =': ')
+                            print(lista_questoes[q][keys])
+                        break
+                except ValueError:
+                    print("Digite um número inteiro.")
+                except IndexError:
+                    print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+
+    input()
+
+def editar_questao(lista_questoes, infos_questoes):
+    cont = 1
+    escolhas = 0
+
+    while True:
+        try:
+            q = int(input("Qual o ID da questão que deseja editar? "))
+            if q >= len(lista_questoes) or q < 0:
+                print("Não existe questão com esse ID.")
+            else:
+                for item in infos_questoes:
+                    print(f"{cont}. {item}")
+                    cont+=1
+                while escolhas not in range(1, 12):
+                    try:
+                        escolhas = int(input("Digite o número correspondente a informação que deseja editar: "))
+                        if infos_questoes[escolhas-1] == "value":
+                            while True:
+                                try:
+                                    lista_questoes[q][infos_questoes[escolhas-1]] = int(input(f"Digite o novo {infos_questoes[escolhas-1]}: "))
+                                    if lista_questoes[q][infos_questoes[escolhas-1]] < 0:
+                                        print("Digite um número inteiro.")  
+                                    else:
+                                        break
+                                except:
+                                    print("Digite um número inteiro.")
+                        elif infos_questoes[escolhas-1] == "answer":
+                            while True:
+                                try:
+                                    lista_questoes[q][infos_questoes[escolhas-1]] = int(input(f"Digite o novo {infos_questoes[escolhas-1]}: "))
+                                    if lista_questoes[q][infos_questoes[escolhas-1]] not in range(1, 6):
+                                        print("Digite um número entre 1 e 5")
+                                    else:
+                                        break
+                                except:
+                                    print("Digite um número entre 1 e 5")
+                        else:
+                            lista_questoes[q][infos_questoes[escolhas-1]] = input(f"Digite o novo {infos_questoes[escolhas-1]}: ")
+                        while escolhas not in ["S", "N"]:
+                            escolhas = input("Deseja editar mais algo? (S/n)").upper()
+                        if escolhas == "N":
+                            break
+                    except ValueError:
+                        print("Digite um número inteiro válido.")    
+        except ValueError:
+            print("Digite um número inteiro referente ao ID de uma questão.")
+            
+        if escolhas == "N":
+                break
+        
+def deletar_questao(lista_questoes):
+    while True:
+        try:
+            q = int(input("ID da questão? "))
+            if q < 0:
+                print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+            else:
+                del lista_questoes[q]
+                break
+        except ValueError:
+            print("Digite um número inteiro.")
+        except IndexError:
+            print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
