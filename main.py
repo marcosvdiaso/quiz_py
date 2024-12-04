@@ -117,7 +117,6 @@ while escolha_menu != 4:
                                 cont_questao+=1
                             else:
                                 print("Resposta errada, perdeu 3 segundos.\n")
-                                cont_questao+=1
                                 tempo_restante[0] -= 3
 
                         parar_timer.set()

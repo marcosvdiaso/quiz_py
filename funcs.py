@@ -13,7 +13,12 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
         
     resposta_certa = answer
     while resposta_usuario not in range(1,6):
-        resposta_usuario = int(input("Insira sua resposta: "))
+        while True:
+            try:
+                resposta_usuario = int(input("Insira sua resposta: "))
+                break
+            except ValueError:
+                print("Digite 0 (para dicas) ou um número entre 1 e 5 para respostas.")
         if resposta_usuario == resposta_certa:
             questoes_corretas+=1
             if questoes_corretas % 3 == 0 and questoes_corretas > 0:
