@@ -1,4 +1,4 @@
-import time, random, json
+import time, random, json, threading, os
 
 def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, answer, hint, dicas_usadas, max_dicas, questoes_corretas):
     resposta_usuario = 0
@@ -282,3 +282,86 @@ def deletar_questao(lista_questoes):
             print("Digite um número inteiro.")
         except IndexError:
             print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+
+def modo_questoes_fixas(config_modos, lista_questoes):
+    cont_questao = 1
+    pont = 0
+    max_dicas = config_modos["questoes_fixas"]["dicas"]
+    dicas_usadas = 0
+    questoes_corretas = 0
+    questoes_feitas = []
+
+    while cont_questao <= config_modos["questoes_fixas"]["questoes"]:
+        questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
+        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
+        if resposta == True:
+            print("Resposta Correta!\n")
+            pont += questao_escolhida["value"]
+        elif resposta == "pular":
+            print("Questão pulada. Pontuação recebida reduzida.\n")
+            pont += (questao_escolhida["value"]//2)
+        else:
+            print("Resposta errada. Sem pontuação.\n")
+        cont_questao+=1
+
+    return pont
+
+def modo_limite_de_tempo(config_modos, lista_questoes):
+    parar_timer = threading.Event()
+    cont_questao = 1
+    max_dicas = config_modos["limite_de_tempo"]["dicas"]
+    dicas_usadas = 0
+    tempo = config_modos["limite_de_tempo"]["questoes"] * 10
+    tempo_restante = [tempo]
+    questoes_corretas = 0
+    questoes_feitas = []
+
+    questao_escolhida = random.choice(lista_questoes)
+    questoes_feitas.append(questao_escolhida)
+
+    cont_tempo = threading.Thread(target=timer, args=(tempo_restante,parar_timer,))
+    cont_tempo.start()    
+    os.system('cls' if os.name == 'nt' else 'clear')                    
+
+    while tempo_restante[0] > 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
+        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
+        if resposta == True:
+            print("Resposta Correta!\n")
+            questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
+            cont_questao+=1
+        elif resposta == "pular":
+            print("Questão pulada. Sem pontuação.\n")
+            cont_questao+=1
+        else:
+            print("Resposta errada, perdeu 3 segundos.\n")
+            tempo_restante[0] -= 3
+
+    parar_timer.set()
+    cont_tempo.join()
+    return tempo_restante[0]
+
+def modo_tente_nao_errar(config_modos, lista_questoes):
+    cont_questao = 1
+    pont = 0
+    max_dicas = config_modos["tente_nao_errar"]["dicas"]
+    dicas_usadas = 0
+    questoes_corretas = 0
+    questoes_feitas = []
+    
+    while cont_questao <= len(lista_questoes):
+        questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
+        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
+        if resposta == True:
+            print("Resposta Correta!\n")
+            pont += questao_escolhida["value"]
+        elif resposta == "pular":
+            print("Questão pulada. Sem pontuação.\n")
+        else:
+            print("Você errou.\n")
+            break
+        cont_questao+=1
+
+    if cont_questao >= len(lista_questoes):
+        print("As questões acabaram. Você venceu o modo Tente não errar.")
+
+    return pont

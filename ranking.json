@@ -18,10 +18,6 @@
   },
   {
    "nome": "Marcos",
-   "pontuacao": 61
-  },
-  {
-   "nome": "Marcos",
    "pontuacao": 55
   },
   {
@@ -37,8 +33,12 @@
    "pontuacao": 52
   },
   {
+   "nome": "Marco",
+   "pontuacao": 52
+  },
+  {
    "nome": "Marcos",
-   "pontuacao": 50
+   "pontuacao": 6
   }
  ],
  [
@@ -73,6 +73,10 @@
   {
    "nome": "Marcos",
    "pontuacao": 75
+  },
+  {
+   "nome": "Marcos",
+   "pontuacao": 54
   }
  ],
  [
@@ -81,8 +85,16 @@
    "pontuacao": 154
   },
   {
+   "nome": "Marc",
+   "pontuacao": 151
+  },
+  {
    "nome": "Marcos",
    "pontuacao": 100
+  },
+  {
+   "nome": "Mrc",
+   "pontuacao": 21
   },
   {
    "nome": "Marcos",
