@@ -84,7 +84,6 @@ while escolha_menu != 4:
                         escolha_modo = 0
                         escolha_menu = 0
                     case 2:
-                        os.system('cls' if os.name == 'nt' else 'clear')
                         parar_timer = threading.Event()
                         cont_questao = 1
                         pont = 0
@@ -99,6 +98,7 @@ while escolha_menu != 4:
 
                         cont_tempo = threading.Thread(target=timer, args=(tempo_restante,parar_timer,))
                         cont_tempo.start()
+                        os.system('cls' if os.name == 'nt' else 'clear')
 
                         while tempo_restante[0] > 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
                             resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)

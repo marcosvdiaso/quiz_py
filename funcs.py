@@ -67,7 +67,7 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
         
 def timer(tempo_restante, parar_timer):
     while tempo_restante[0] > 0 and not parar_timer.is_set():
-        print(f"Tempo restante: {tempo_restante[0]}")
+        print(f"\rTempo restante: {tempo_restante[0]}{' ' * 10}", end='')
         time.sleep(1)
         tempo_restante[0] -= 1
 
