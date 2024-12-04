@@ -6,18 +6,22 @@ escolha_config = 0
 escolha_modo = 0
 infos_questoes = ["category", "value", "questionPath", "questionText", "option1", "option2", "option3", "option4", "option5", "answer", "hint"]
 
-while escolha_menu != 3:
+while escolha_menu != 4:
+    with open("ranking.json") as x:
+        ranking = json.load(x)
+    
     print('''1. Jogar
 2. Configurar
-3. Sair''')
+3. Ranking
+4. Sair''')
 
-    while escolha_menu not in range(1, 4):
+    while escolha_menu not in range(1, 5):
         try:
             escolha_menu = int(input("Escolha a opção desejada: "))
-            if escolha_menu not in range(1, 4):
-                print("Digite um número de 1 a 3.")
+            if escolha_menu not in range(1, 5):
+                print("Digite um número de 1 a 4.")
         except:
-            print("Digite um número de 1 a 3.")
+            print("Digite um número de 1 a 4.")
     
     match escolha_menu:
         case 1:
@@ -44,10 +48,11 @@ while escolha_menu != 3:
                     pont = 0
                     max_dicas = config_modos["questoes_fixas"]["dicas"]
                     dicas_usadas = 0
+                    questoes_corretas = 0
 
                     while cont_questao <= config_modos["questoes_fixas"]["questoes"]:
                         questao_escolhida = random.choice(lista_questoes)
-                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
+                        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
                         if resposta == True:
                             print("Resposta Correta!")
                             pont += questao_escolhida["value"]
@@ -58,7 +63,12 @@ while escolha_menu != 3:
                             print("Resposta errada. Sem pontuação.")
                         cont_questao+=1
 
-                    input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
+                    entrar_ranking(ranking[0], pont)
+                    ordena_ranking(ranking[0])
+
+                    with open("ranking.json", "w") as x:
+                        json.dump(ranking, x, indent=1)
+
                     escolha_modo = 0
                     escolha_menu = 0
                 case 2:
@@ -69,19 +79,21 @@ while escolha_menu != 3:
                     dicas_usadas = 0
                     tempo = config_modos["limite_de_tempo"]["questoes"] * 10
                     tempo_restante = [tempo]
+                    questoes_corretas = 0
 
                     questao_escolhida = random.choice(lista_questoes)
                     cont_tempo = threading.Thread(target=timer, args=(tempo_restante,parar_timer,))
                     cont_tempo.start()
 
                     while tempo_restante[0] > 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
-                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
+                        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
                         if resposta == True:
                             print("Resposta Correta!")
                             questao_escolhida = random.choice(lista_questoes)
                             cont_questao+=1
                         elif resposta == "pular":
                             print("Questão pulada. Sem pontuação.")
+                            cont_questao+=1
                         else:
                             print("Resposta errada, tente novamente.")
 
@@ -89,7 +101,12 @@ while escolha_menu != 3:
                     pont = tempo_restante[0]
                     cont_tempo.join()
 
-                    input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
+                    entrar_ranking(ranking[1], pont)
+                    ordena_ranking(ranking[1])
+
+                    with open("ranking.json", "w") as x:
+                        json.dump(ranking, x, indent=1)
+
                     escolha_modo = 0
                     escolha_menu = 0
                 case 3:
@@ -97,10 +114,11 @@ while escolha_menu != 3:
                     pont = 0
                     max_dicas = config_modos["tente_nao_errar"]["dicas"]
                     dicas_usadas = 0
+                    questoes_corretas = 0
                     
                     while cont_questao <= len(lista_questoes):
                         questao_escolhida = random.choice(lista_questoes)
-                        resposta, dicas_usadas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas)
+                        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
                         if resposta == True:
                             print("Resposta Correta!")
                             pont += questao_escolhida["value"]
@@ -113,7 +131,13 @@ while escolha_menu != 3:
 
                     if cont_questao >= len(lista_questoes):
                         print("As questões acabaram. Você venceu o modo Tente não errar.")
-                    input(f"Pontuação {pont}. Sua pontuação é o bastante para entrar no Hall da Fama, para prosseguir insira seu nome: ")
+                    
+                    entrar_ranking(ranking[2], pont)
+                    ordena_ranking(ranking[2])
+
+                    with open("ranking.json", "w") as x:
+                        json.dump(ranking, x, indent=1)
+
                     escolha_modo = 0 
                     escolha_menu = 0
                 case 4:
@@ -121,7 +145,7 @@ while escolha_menu != 3:
                     escolha_menu = 0
         case 2:
             os.system('cls' if os.name == 'nt' else 'clear')
-            while escolha_config != 5:
+            while escolha_config != 6:
                 print("1. Criar nova questão")
                 print("2. Visualizar questões")
                 print("3. Atualizar uma questão")
@@ -294,6 +318,45 @@ while escolha_menu != 3:
                         os.system('cls' if os.name == 'nt' else 'clear')
                         escolha_menu = 0
         case 3:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print("Qual ranking deseja visualizar?")
+            print("1. Questões Fixas")
+            print("2. Limite de Tempo")
+            print("3. Tente não Errar")
+            print("4. Voltar")
+            while escolha_config not in range(1, 5):
+                try:
+                    escolha_config = int(input("Escolha a opção desejada: "))
+                    if escolha_config not in range(1, 5):
+                        print("Digite um número de 1 a 4.")
+                except:
+                    print("Digite um número de 1 a 4.")
+
+            match escolha_config:
+                case 1:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print("RANKING MODO DE QUESTÕES FIXAS")
+                    visualizar_ranking(ranking[0])
+                    input()
+                    escolha_config = 0
+                case 2:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print("RANKING MODO LIMITE DE TEMPO")
+                    visualizar_ranking(ranking[1])
+                    input()
+                    escolha_config = 0
+                case 3:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print("RANKING TENTE NÃO ERRAR")
+                    visualizar_ranking(ranking[2])
+                    input()
+                    escolha_config = 0
+                case 4:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    escolha_config = 0
+                    escolha_menu = 0
+
+        case 4:
             escolha_sair = input("Deseja realmente sair? (S/n)").upper()
             if escolha_sair == "N":
                 escolha_menu = 0

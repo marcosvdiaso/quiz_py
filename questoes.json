@@ -381,12 +381,12 @@
   "value": 3,
   "questionPath": "",
   "questionText": "Qual artista \u00e9 conhecido como o 'Rei do Pop'?",
-  "option1": "Michael Jackson",
-  "option2": "Elvis Presley",
+  "option1": "Elvis Presley",
+  "option2": "Michael Jackson",
   "option3": "Prince",
   "option4": "Justin Timberlake",
   "option5": "Stevie Wonder",
-  "answer": 1,
+  "answer": 2,
   "hint": "Seu \u00e1lbum 'Thriller' \u00e9 um dos mais vendidos de todos os tempos."
  }
 ]
