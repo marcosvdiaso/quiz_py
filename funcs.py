@@ -5,12 +5,12 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
     cont = 1
     opts = [op1, op2, op3, op4, op5]
     eliminados = []
-    print(f"Questão {x} | Categoria: {category} | Valor: {value} pontos")
+    print(f"Questão {x} | Categoria: {category} | Valor: {value} pontos | Número de dicas restantes: {max_dicas - dicas_usadas}")
     print(f"{questionText}")
     for op in opts:
         print(f"{cont}. {op}")
         cont+=1
-
+        
     resposta_certa = answer
     while resposta_usuario not in range(1,6):
         resposta_usuario = int(input("Insira sua resposta: "))
@@ -19,12 +19,20 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
             if questoes_corretas % 3 == 0 and questoes_corretas > 0:
                 dicas_usadas -= 1
             return True, dicas_usadas, questoes_corretas
-        elif resposta_usuario == 0: # configurar maximo de dicas, configurar pular questao, configurar remover 3 repostas erradas
-            if dicas_usadas < max_dicas: # variavel dicas_usadas so esta funcionando por questao, configurar por modo de jogo todo
+        elif resposta_usuario == 0:
+            if dicas_usadas < max_dicas:
                 print("1. Dica textual")
                 print("2. Eliminar 2 alternativas erradas")
                 print("3. Pular questão")
-                dica = int(input("Qual dica quer usar? ")) # add validacao
+                while True:
+                    try:
+                        dica = int(input("Qual dica quer usar? "))
+                        if dica not in range(1, 4):
+                            print("Digite um número de 1 a 3.")
+                        else:
+                            break
+                    except ValueError:
+                        print("Digite um número de 1 a 3.")
 
                 match dica:
                     case 1:
