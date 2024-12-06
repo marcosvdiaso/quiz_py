@@ -85,9 +85,10 @@ while escolha_menu != 4:
                         lista_questoes = load_json("questoes.json") # Carrega o arquivo de questoes para a variavel
 
                         questao = criar_questao() # Chama a função criar questão e atribui o valor a variavel questao
-                        lista_questoes.append(questao) # Adiciona a nova questao à variável
+                        if questao != 0:
+                            lista_questoes.append(questao) # Adiciona a nova questao à variável
 
-                        dump_json("questoes.json", lista_questoes) # Da dump na nova variável para o arquivo
+                            dump_json("questoes.json", lista_questoes) # Da dump na nova variável para o arquivo
 
                         os.system('cls' if os.name == 'nt' else 'clear')
                         escolha_config = 0         
@@ -199,6 +200,7 @@ while escolha_menu != 4:
                     escolha_config = 0
                     escolha_menu = 0
         case 4: # Encerrar o programa
-            escolha_sair = input("Deseja realmente sair? (S/n)").upper()
+            escolha_sair = input("Deseja realmente sair? (N para voltar) ").upper()
             if escolha_sair == "N":
                 escolha_menu = 0
+                os.system('cls' if os.name == 'nt' else 'clear')

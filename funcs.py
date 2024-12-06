@@ -130,8 +130,11 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
     while resposta_usuario not in range(1,6):
         while True:
             try:
-                resposta_usuario = int(input("Insira sua resposta: "))
-                break
+                resposta_usuario = int(input("Insira sua resposta (1 a 5, ou 0 para dicas): "))
+                if resposta_usuario not in range(0, 6):
+                    print("Digite 0 (para dicas) ou um número entre 1 e 5 para respostas.")
+                else:
+                    break
             except ValueError:
                 print("Digite 0 (para dicas) ou um número entre 1 e 5 para respostas.")
         if resposta_usuario == resposta_certa: # Se a resposta do usuário estiver correta, retorna True e soma +1 nas questões corretas
@@ -215,7 +218,10 @@ Após isso retorna o dicionário "questao"
 '''
 def criar_questao():
     questao = {}
+    print("Digite 0 em \"Categoria\" para retornar.")
     questao["category"] = input("Categoria da questão: ")
+    if questao["category"] == "0":
+        return 0
     while True:
         try:
             questao["value"] = int(input("Valor númerico para o acerto da questão: "))
@@ -251,13 +257,13 @@ def visualizar_questao(lista_questoes):
     print(f"Total de questões na lista: {len(lista_questoes)}")
     while True:
         try:
-            escolhas = int(input("Deseja ver todas as questões (1) ou apenas uma específica? (2) "))
-            if escolhas not in range(1, 3):
-                print("Digite 1 ou 2.")
+            escolhas = int(input("1. Ver todas as questões.\n2. Ver uma questão específica\n3. Voltar\n"))
+            if escolhas not in range(1, 4):
+                print("Digite um número entre 1 e 3.")
             else:
                 break
         except ValueError:
-            print("Digite 1 ou 2.")
+            print("Digite um número entre 1 e 3.")
     match escolhas:
         case 1: # Caso o usuário tenha escolhido ver todas as questões
             cont = 1
@@ -283,6 +289,8 @@ def visualizar_questao(lista_questoes):
                     print("Digite um número inteiro.")
                 except IndexError:
                     print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+        case 3:
+            return
 
     input()
 
@@ -299,8 +307,10 @@ def editar_questao(lista_questoes, infos_questoes):
 
     while True:
         try:
-            q = int(input("Qual o ID da questão que deseja editar? "))
-            if q >= len(lista_questoes) or q < 0:
+            q = int(input("Qual o ID da questão que deseja editar? (Digite -1 para voltar) "))
+            if q == -1:
+                break
+            elif q >= len(lista_questoes) or q < 0:
                 print("Não existe questão com esse ID.")
             else:
                 for item in infos_questoes:
@@ -350,9 +360,11 @@ Solicita o ID da questão, se for um ID válido, deleta a questão
 def deletar_questao(lista_questoes):
     while True:
         try:
-            q = int(input("ID da questão? "))
-            if q < 0:
-                print(f"Digite um número entre 0 e {len(lista_questoes)-1}")
+            q = int(input("ID da questão? (Digite -1 para voltar)"))
+            if q == -1:
+                break
+            elif q < 0:
+                print(f"Os IDs das questões estão entre 0 e {len(lista_questoes)-1}")
             else:
                 del lista_questoes[q]
                 break
