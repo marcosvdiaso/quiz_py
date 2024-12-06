@@ -367,6 +367,7 @@ def deletar_questao(lista_questoes):
                 print(f"Os IDs das questões estão entre 0 e {len(lista_questoes)-1}")
             else:
                 del lista_questoes[q]
+                input("Questão deletada com sucesso.")
                 break
         except ValueError:
             print("Digite um número inteiro.")
@@ -387,6 +388,7 @@ def config_modos_questoes(questoes, lista_questoes):
             if questoes > len(lista_questoes) or questoes < 1:
                 print(f"Digite um valor entre 1 e {len(lista_questoes)}.")
             else:
+                input("Número de questões alterado com sucesso.")
                 return questoes
         except ValueError:
             print("Digite um número inteiro válido.")
@@ -398,6 +400,7 @@ def config_modos_dicas(dicas):
             if dicas < 0:
                 print("Digite um número inteiro válido.")
             else:
+                input("Número de dicas alterado com sucesso.")
                 return dicas
         except ValueError:
             print("Digite um número inteiro válido.")

@@ -89,6 +89,7 @@ while escolha_menu != 4:
                             lista_questoes.append(questao) # Adiciona a nova questao à variável
 
                             dump_json("questoes.json", lista_questoes) # Da dump na nova variável para o arquivo
+                            input("Questão criada com sucesso.")
 
                         os.system('cls' if os.name == 'nt' else 'clear')
                         escolha_config = 0         
@@ -109,7 +110,7 @@ while escolha_menu != 4:
                         editar_questao(lista_questoes, infos_questoes) # Chama a função editar questao, as edições já alteram diretamente na lista_questoes
                             
                         dump_json("questoes.json", lista_questoes) # Da dump na nova lista_questoes para o arquivo
-                            
+                        
                         os.system('cls' if os.name == 'nt' else 'clear')
                         escolha_config = 0
                     
