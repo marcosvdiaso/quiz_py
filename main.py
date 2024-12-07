@@ -26,7 +26,7 @@ while escolha_menu != 4:
                 print("1. Questões Fixas")
                 print("2. Limite de Tempo")
                 print("3. Tente não errar")
-                print("4. Voltar")
+                print("4. Retornar ao menu inicial")
                 escolha_modo = validacao_menu(1, 5) # Menu de escolha de modo
 
                 match escolha_modo:
@@ -171,7 +171,7 @@ while escolha_menu != 4:
             print("1. Questões Fixas")
             print("2. Limite de Tempo")
             print("3. Tente não Errar")
-            print("4. Voltar")
+            print("4. Retornar ao menu inicial")
             escolha_config = validacao_menu(1, 5) # Usuário decide qual ranking quer visualizar
 
             match escolha_config:

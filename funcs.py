@@ -61,7 +61,7 @@ def modo_limite_de_tempo(config_modos, lista_questoes):
     os.system('cls' if os.name == 'nt' else 'clear')                    
 
     while tempo_restante[0] > 0 and cont_questao <= config_modos["limite_de_tempo"]["questoes"]:
-        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
+        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], "Tempo", questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
         if resposta == True:
             print("Resposta Correta!\n")
             questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
@@ -94,10 +94,10 @@ def modo_tente_nao_errar(config_modos, lista_questoes):
     
     while cont_questao <= len(lista_questoes):
         questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
-        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
+        resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], 1, questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
         if resposta == True:
             print("Resposta Correta!\n")
-            pont += questao_escolhida["value"]
+            pont += 1
         elif resposta == "pular":
             print("Questão pulada. Sem pontuação.\n")
         else:
@@ -120,7 +120,7 @@ def print_questoes(x, category, op1, op2, op3, op4, op5, value, questionText, an
     cont = 1
     opts = [op1, op2, op3, op4, op5]
     eliminados = []
-    print(f"Questão {x} | Categoria: {category} | Valor: {value} pontos | Número de dicas restantes: {max_dicas - dicas_usadas}")
+    print(f"Questão {x} | Categoria: {category} | Valor: {value} | Número de dicas restantes: {max_dicas - dicas_usadas}")
     print(f"{questionText}")
     for op in opts:
         print(f"{cont}. {op}")
@@ -191,9 +191,11 @@ A cada 1 segundo printa o tempo restante atual e diminui 1 da variável tempo re
 def timer(tempo_restante, parar_timer):
     while tempo_restante[0] > 0 and not parar_timer.is_set():
         # Utiliza \r para printar sempre na mesma linha. Da um espaço após o print, para que dê para o usuário digitar a resposta correta, sem bagunçar muito a visualização
-        print(f"\rTempo restante: {tempo_restante[0]}{' ' * 10}", end='') 
+        print(f"\rTempo restante: {tempo_restante[0]}{' ' * 30}", end='') 
         time.sleep(1)
         tempo_restante[0] -= 1
+    if tempo_restante[0] == 0:
+        print("Seu tempo acabou.")
 
 '''
 Função para selecionar questão aleatória
@@ -447,6 +449,7 @@ def entrar_ranking(ranking, pont):
             ranking[9] = jogador
         else:
             print("Sua pontuação não foi o bastante para entrar no ranking.")
+            input()
     except IndexError:
         print("Sua pontuação foi o bastante para entrar no ranking!")
         nome = input(f"Pontuação {pont}. Digite seu nome para salvar sua pontuação: ")
