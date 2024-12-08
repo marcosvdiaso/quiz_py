@@ -19,6 +19,7 @@ def modo_questoes_fixas(config_modos, lista_questoes):
 
     while cont_questao <= config_modos["questoes_fixas"]["questoes"]:
         questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
+        print(f"Pontuação atual: {pont}")
         resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], questao_escolhida["value"], questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
         if resposta == True:
             print("Resposta Correta!\n")
@@ -94,6 +95,7 @@ def modo_tente_nao_errar(config_modos, lista_questoes):
     
     while cont_questao <= len(lista_questoes):
         questao_escolhida = selecionar_questao(lista_questoes, questoes_feitas)
+        print(f"Pontuação atual: {pont}")
         resposta, dicas_usadas, questoes_corretas = print_questoes(cont_questao, questao_escolhida["category"], questao_escolhida["option1"], questao_escolhida["option2"], questao_escolhida["option3"], questao_escolhida["option4"], questao_escolhida["option5"], 1, questao_escolhida["questionText"], questao_escolhida["answer"], questao_escolhida["hint"], dicas_usadas, max_dicas, questoes_corretas)
         if resposta == True:
             print("Resposta Correta!\n")
