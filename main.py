@@ -1,8 +1,20 @@
+# Autor: Marcos Vinicius Dias Oliveira
+# Componente Curricular: MI Algoritmos
+# Concluído em: 08/12/2024
+# Declaro que este código foi elaborado por mim de forma individual e não contém nenhum
+# trecho de código de outro colega ou de outro autor, tais como provindos de livros e
+# apostilas, e páginas ou documentos eletrônicos da Internet. Qualquer trecho de código
+# de outra autoria que não a minha está destacado com uma citação para o autor e a fonte
+# do código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+
 import os
+diretorio = os.path.dirname(os.path.abspath(__file__)) # Define a variável "diretorio" como o diretório atual do código-fonte
+os.chdir(diretorio) # Troca o diretório de trabalho para o diretório que foi guardado na variável "diretorio"
 from funcs import *
 
 escolha_menu = 0
 infos_questoes = ["category", "value", "questionPath", "questionText", "option1", "option2", "option3", "option4", "option5", "answer", "hint"]
+
 
 while escolha_menu != 4:
     escolha_config = 0
@@ -179,21 +191,21 @@ while escolha_menu != 4:
                     os.system('cls' if os.name == 'nt' else 'clear')
                     print("RANKING MODO DE QUESTÕES FIXAS")
                     visualizar_ranking(ranking[0]) # Chama a função visualizar_ranking no index 0 da matriz ranking, que a lista do modo de jogo questões fixas 
-                    input()
+                    input("Aperte Enter para voltar. ")
                     os.system('cls' if os.name == 'nt' else 'clear')
                     escolha_config = 0
                 case 2: # Ranking limite de tempo
                     os.system('cls' if os.name == 'nt' else 'clear')
                     print("RANKING MODO LIMITE DE TEMPO")
                     visualizar_ranking(ranking[1]) # Chama a função visualizar_ranking no index 1 da matriz ranking, que a lista do modo de jogo limite de tempo 
-                    input()
+                    input("Aperte Enter para voltar. ")
                     os.system('cls' if os.name == 'nt' else 'clear')
                     escolha_config = 0
                 case 3: # Ranking tente não errar
                     os.system('cls' if os.name == 'nt' else 'clear')
                     print("RANKING TENTE NÃO ERRAR")
                     visualizar_ranking(ranking[2]) # Chama a função visualizar_ranking no index 2 da matriz ranking, que a lista do modo de jogo tente não errar
-                    input()
+                    input("Aperte Enter para voltar. ")
                     os.system('cls' if os.name == 'nt' else 'clear')
                     escolha_config = 0
                 case 4: # Voltar
