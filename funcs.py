@@ -433,7 +433,7 @@ Printa até que cont atinja 9 (as 10 primeiras posições), ou caso o ranking te
 def visualizar_ranking(ranking):
     cont = 0
     while cont <= 9 and cont < len(ranking):
-        print(f"{cont+1}º lugar: {ranking[cont]["nome"]} | {ranking[cont]["pontuacao"]} pontos")
+        print(f"{cont+1}º lugar: {ranking[cont]['nome']} | {ranking[cont]['pontuacao']} pontos")
         cont+=1
 
 '''
